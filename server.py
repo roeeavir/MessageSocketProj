@@ -22,21 +22,23 @@ def handle_client(c):
         msg = "Mezuval {} has joined the chat".format(name)
 
         broadcast(bytes(msg, "utf8"))
-        clients[c] = name
-
-        while True:
-            msg = c.recv(BUFSIZ)
-            if msg != bytes("{quit}", "utf8"):
-                broadcast(msg, name+": ")
-            else:
-                c.send(bytes("{quit}", "utf8"))
-                c.close()
-                del clients[c]
-                msg = "Mezuval {} has quit the fun".format(name)
-                broadcast(bytes(msg, "utf8"))
-                break
     except OSError:
         print("{} has disconnected from chat!".format(name))
+        clients[c] = name
+
+    while True:
+        try:
+        msg = c.recv(BUFSIZ)
+        if msg != bytes("{quit}", "utf8"):
+            broadcast(msg, name+": ")
+        else:
+            c.send(bytes("{quit}", "utf8"))
+            c.close()
+            del clients[c]
+            msg = "Mezuval {} has quit the fun".format(name)
+            broadcast(bytes(msg, "utf8"))
+            break
+
 
 
 def broadcast(msg, prefix=""):
