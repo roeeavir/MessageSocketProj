@@ -17,7 +17,7 @@ def accept_connection():
 
 def handle_client(c):
     name = c.recv(BUFSIZ).decode("utf8")
-    # try:
+
     welcome = 'Hello %s!\nIf you want to quit, type {quit} to exit.' % name
     c.send(bytes(welcome, "utf8"))
 
