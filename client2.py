@@ -26,9 +26,7 @@ def send():
     client_socket.close()
 
 
-
 if __name__ == "__main__":
-
     HOST = input('Enter host: ')
     PORT = input('Enter port: ')
     if not HOST:

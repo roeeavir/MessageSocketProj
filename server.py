@@ -6,34 +6,37 @@ from threading import Thread
 def accept_connection():
     while True:
         c, ca = SERVER.accept()
-        print("{}:\n client {} has connected".format(time.localtime(), ca))
-        c.send(bytes("Please kill a me", "utf8"))
+        print("Time is {}:{}\n client {} has connected".format(time.localtime().tm_hour,time.localtime().tm_min,
+                                                                ca))
+        c.send(bytes("You are now connected to chat!", "utf8"))
         addresses[c] = ca
         Thread(target=handle_client, args=(c,)).start()
 
 
 def handle_client(c):
-    name = c.recv(BUFSIZ).decode()
+    name = c.recv(BUFSIZ).decode("utf8")
+    try:
+        welcome = 'Hello %s!\nIf you want to quit, type {quit} to exit.' % name
+        c.send(bytes(welcome, "utf8"))
 
-    welcome = 'Hello %s !\nIf you want to quit, type {quit} to exit.' % name
-    c.send(bytes(welcome, "utf8"))
+        msg = "Mezuval {} has joined the chat".format(name)
 
-    msg = "Mezuval {} has joined the fun".format(name)
+        broadcast(bytes(msg, "utf8"))
+        clients[c] = name
 
-    broadcast(bytes(msg, "utf8"))
-    clients[c] = name
-
-    while True:
-        msg = c.recv(BUFSIZ)
-        if msg != bytes("{quit}", "utf8"):
-            broadcast(bytes(msg, name + ": "))
-        else:
-            c.send(bytes("{quit}", "utf8"))
-            c.close()
-            del clients[c]
-            msg = "Mezuval {} has quit the fun".format(name)
-            broadcast(bytes(msg, "utf8"))
-            break
+        while True:
+            msg = c.recv(BUFSIZ)
+            if msg != bytes("{quit}", "utf8"):
+                broadcast(msg, name+": ")
+            else:
+                c.send(bytes("{quit}", "utf8"))
+                c.close()
+                del clients[c]
+                msg = "Mezuval {} has quit the fun".format(name)
+                broadcast(bytes(msg, "utf8"))
+                break
+    except OSError:
+        print("{} has disconnected from chat!".format(name))
 
 
 def broadcast(msg, prefix=""):
