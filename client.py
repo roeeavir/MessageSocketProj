@@ -3,8 +3,6 @@ from threading import Thread
 import time
 
 
-# import tkinter
-
 def receive():
     while True:
         try:
@@ -13,7 +11,6 @@ def receive():
         except OSError:
             print("You have disconnected from chat")
             break
-
 
 def send():
     time.sleep(1)
@@ -26,14 +23,12 @@ def send():
     client_socket.close()
 
 
-
 if __name__ == "__main__":
 
     HOST = input('Enter host: ')
     PORT = input('Enter port: ')
     if not HOST:
         HOST = "127.0.0.1"
-
     if not PORT:
         PORT = 33000
     else:
