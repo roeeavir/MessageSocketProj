@@ -24,6 +24,7 @@ def receive(chat):
 def send(client_message_box, m):
     msg = client_message_box.get("1.0", tkinter.END)
     client_socket.send(bytes(msg, "utf8"))
+    client_message_box.delete('1.0', tkinter.END)
     if msg == "{quit}":
         m.destroy()
 
