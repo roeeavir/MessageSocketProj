@@ -1,50 +1,59 @@
 import socket
-from threading import Thread
-import time
 
 
-# import tkinter
+import tkinter
 
-def receive():
+BUFSIZ = 1024
+
+
+def receive(chat):
     while True:
         try:
             msg = client_socket.recv(BUFSIZ).decode("utf8")
-            print(msg)
+            # print(msg)
+            # new_msg = chat.cget("text") + msg
+            for i in msg.split('!'):
+                chat.insert(tkinter.END, i + "\n")
+            # chat.update_idletasks()
+            # tkinter.mainloop()
+
         except OSError:
-            print("You have disconnected from chat")
             break
 
 
-def send():
-    time.sleep(1)
-    msg = input('Enter your name:\n')
+def send(client_message_box, m):
+    msg = client_message_box.get("1.0", tkinter.END)
     client_socket.send(bytes(msg, "utf8"))
-    while msg != "{quit}":
-        time.sleep(1)
-        msg = input('Enter message:\n')
-        client_socket.send(bytes(msg, "utf8"))
-    client_socket.close()
+    if msg == "{quit}":
+        m.destroy()
 
 
-if __name__ == "__main__":
-    HOST = input('Enter host: ')
-    PORT = input('Enter port: ')
-    if not HOST:
-        HOST = "127.0.0.1"
-
-    if not PORT:
-        PORT = 33000
+def set_connection(client_host, client_port, client_name, n):
+    host = client_host.get()
+    port = client_port.get()
+    if not host:
+        host = "127.0.0.1"
+    if not port:
+        port = 33000
     else:
-        PORT = int(PORT)
+        port = int(port)
 
-    BUFSIZ = 1024
-    ADDR = (HOST, PORT)
+    addr = (host, port)
 
+    global client_socket
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect(ADDR)
+    client_socket.connect(addr)
 
-    receive_thread = Thread(target=receive)
-    receive_thread.start()
+    msg = client_name.get()
 
-    send_thread = Thread(target=send)
-    send_thread.start()
+    client_socket.send(bytes(msg, "utf8"))
+
+    n.destroy()
+
+
+def on_closing(m):
+    client_socket.send(bytes("{quit}", "utf8"))
+    m.destroy()
+
+
+
