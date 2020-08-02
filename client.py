@@ -10,13 +10,13 @@ def receive(chat):
     while True:
         try:
             msg = client_socket.recv(BUFSIZ).decode("utf8")
-            # print(msg)
-            # new_msg = chat.cget("text") + msg
             for i in msg.split('!'):
                 chat.insert(tkinter.END, i + "\n")
+            chat.yview_pickplace("end")
+            # print(msg)
+            # new_msg = chat.cget("text") + msg
             # chat.update_idletasks()
             # tkinter.mainloop()
-
         except OSError:
             break
 
@@ -57,4 +57,10 @@ def on_closing(m):
     m.destroy()
 
 
+# def isblank(string):
+#     if string and string.strip():
+#         # myString is not None AND myString is not empty or blank
+#         return False
+#     # myString is None OR myString is empty or blank
+#     return True
 
