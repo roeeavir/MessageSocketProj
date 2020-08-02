@@ -1,6 +1,4 @@
 import socket
-
-
 import tkinter
 
 BUFSIZ = 1024
