@@ -11,19 +11,20 @@ def accept_connection():
             time.localtime().tm_min,
             ca
         ))
-        c.send(bytes("You are now connected to chat!", "utf8"))
+        c.send(bytes("You are now connected to chat!\n\n", "utf8"))
         addresses[c] = ca
         Thread(target=handle_client, args=(c,)).start()
+
 
 def handle_client(c):
     name = c.recv(BUFSIZ).decode("utf8")
 
-    welcome = 'Hello %s!\nIf you want to quit, type {quit} to exit.' % name
+    welcome = 'Hello %s!' % name
     c.send(bytes(welcome, "utf8"))
 
     msg = "Mezuval {} has joined the chat".format(name)
     broadcast(bytes(msg, "utf8"))
-    
+
     clients[c] = name
 
     while True:
@@ -38,9 +39,11 @@ def handle_client(c):
             broadcast(bytes(msg, "utf8"))
             break
 
+
 def broadcast(msg, prefix=""):
     for s in clients:
         s.send(bytes(prefix, "utf8") + msg)
+
 
 clients = {}
 addresses = {}
