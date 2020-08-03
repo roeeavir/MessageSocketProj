@@ -35,22 +35,23 @@ n.mainloop()
 
 m = tkinter.Tk()
 mm = tkinter.Frame(m)
+
+mm.pack()
+
 m.title('Best chat in the neighborhood')
+# Set a fixed size for the Chat window SO YOU WONT FUCK IT UP
+m.geometry("450x270")
 
-send_bt = tkinter.Button(m, text='Send', height=3, width=9, command=lambda: client.send(client_message_box, m))
-scroll_bar = tkinter.Scrollbar(mm)
-chat = tkinter.Listbox(mm, width=50, height=10, bg='ghost white', yscrollcommand=scroll_bar.set)
-
+chat = tkinter.Text(mm, width=48, height=10, bg="LightBlue3")
+send_bt = tkinter.Button(m, text='Send', height=1, width=15, command=lambda: client.send(client_message_box, m))
+scroll_bar = tkinter.Scrollbar(mm, orient="vertical")
+scroll_bar.config(command=chat.yview)
 client_message_box = tkinter.Text(m, width=50, height=3)
 
-send_bt.grid(row=1, column=1)
-chat.grid(row=0, column=0)
-
-client_message_box.grid(row=1, column=0)
-
-scroll_bar.grid(row=0, column=0)
-
-mm.grid(row=0, column=0)
+chat.pack(side="left", fill="y")
+scroll_bar.pack(side="right", fill="y")
+client_message_box.pack()
+send_bt.pack()
 
 receive_thread = Thread(target=lambda: client.receive(chat))
 receive_thread.start()
