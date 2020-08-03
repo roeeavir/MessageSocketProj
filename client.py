@@ -23,6 +23,8 @@ def receive(chat):
 
 def send(client_message_box, m):
     msg = client_message_box.get("1.0", tkinter.END)
+    if client_message_box.compare("end-1c", "==", "1.0"):
+        return
     client_socket.send(bytes(msg, "utf8"))
     client_message_box.delete('1.0', tkinter.END)
     if msg == "{quit}":
@@ -57,10 +59,4 @@ def on_closing(m):
     m.destroy()
 
 
-# def isblank(string):
-#     if string and string.strip():
-#         # myString is not None AND myString is not empty or blank
-#         return False
-#     # myString is None OR myString is empty or blank
-#     return True
 
