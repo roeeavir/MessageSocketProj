@@ -43,6 +43,7 @@ m.title('Best chat in the neighborhood')
 m.geometry("450x270")
 
 chat = tkinter.Text(mm, width=48, height=10, bg="LightBlue3")
+chat.configure(state="disabled")
 send_bt = tkinter.Button(m, text='Send', height=1, width=15, command=lambda: client.send(client_message_box, m))
 scroll_bar = tkinter.Scrollbar(mm, orient="vertical")
 scroll_bar.config(command=chat.yview)

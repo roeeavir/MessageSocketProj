@@ -11,7 +11,9 @@ def receive(chat):
         try:
             msg = client_socket.recv(BUFSIZ).decode("utf8")
             for i in msg.split('!'):
+                chat.configure(state="normal")
                 chat.insert(tkinter.END, i + "\n")
+                chat.configure(state="disabled")
             chat.yview_pickplace("end")
             # print(msg)
             # new_msg = chat.cget("text") + msg
